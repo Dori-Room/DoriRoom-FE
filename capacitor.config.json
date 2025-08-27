@@ -1,14 +1,18 @@
 {
   "appId": "com.doriroom.app",
-    "appName": "Dori Room",
-    "webDir": "out",
-    "bundledWebRuntime": false,
-    "plugins": {
-  "SplashScreen": {
-    "launchAutoHide": true,
-        "androidScaleType": "CENTER_CROP",
-        "showSpinner": false
+  "appName": "Dori Room",
+  "webDir": "out",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": true,
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false
+    }
+  },
+  "cordova": {},
+  "server": {
+    "url": "http://10.0.2.2:3000",
+    "cleartext": true
   }
-},
-  "cordova": {}
 }
