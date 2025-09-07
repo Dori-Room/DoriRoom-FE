@@ -4,13 +4,20 @@ import usePurchaseInfo from '@/hooks/shop/usePurchaseInfo';
 import usePurchase from '@/hooks/shop/usePurchase';
 import { useToast } from '@/app/_providers/ToastProvider';
 
-export default function ConfirmModal({ isOpen, setIsOpen, itemId, refetch }) {
+export default function ConfirmModal({
+  isOpen,
+  setIsOpen,
+  itemId,
+  refetch,
+  MCRefetch,
+}) {
   const { items, loading, error } = usePurchaseInfo(itemId);
   const { show } = useToast();
   const { mutate } = usePurchase({
     onSuccess: async () => {
       setIsOpen(false);
       await refetch();
+      await MCRefetch();
     },
     onError: () => {
       return;
@@ -26,7 +33,7 @@ export default function ConfirmModal({ isOpen, setIsOpen, itemId, refetch }) {
       await mutate({ itemId });
       show({
         message: `'${items.name}' 아이템을 구입하였어요!`,
-        variant: 'purchase',
+        variant: 'success',
       });
     } else {
       show({

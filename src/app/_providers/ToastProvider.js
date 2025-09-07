@@ -81,6 +81,11 @@ export default function ToastProvider({ children }) {
 
   const show = useCallback(
     (input) => {
+      if (toasts.length > 0) {
+        // 이미 토스트가 떠 있으면 무시
+        return null;
+      }
+
       const id = genId();
       const toast =
         typeof input === 'string'
@@ -101,7 +106,7 @@ export default function ToastProvider({ children }) {
       }
       return id;
     },
-    [dismiss]
+    [dismiss, toasts.length]
   );
 
   const value = useMemo(
@@ -130,7 +135,9 @@ function ToastItem({ toast }) {
 
   const styles = {
     default: <></>,
-    purchase: <i className="mgc_check_circle_fill text-main-100" />,
+    success: <i className="mgc_check_circle_fill text-main-100" />,
+    error: <i className="mgc_close_circle_fill text-red-400" />,
+    festival: <i className="mgc_user_follow_fill text-lg text-main-100" />,
   };
 
   const anim =
