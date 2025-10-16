@@ -12,7 +12,7 @@ export default function HeaderBar({ credit }) {
   const user = useAuthStore((e) => e.user);
 
   return (
-    <header className="fixed top-15 left-0 right-0 z-50 mx-auto max-w-[390px] w-full">
+    <header className="fixed appbar-padding-t left-0 right-0 z-50 mx-auto w-full">
       <div className="flex justify-between items-start px-4 py-2">
         {/* 왼쪽 포인트 */}
         <div className="sticky flex z-10">
@@ -27,7 +27,7 @@ export default function HeaderBar({ credit }) {
 
         {/* 오른쪽 기능 버튼들 */}
         <div
-          className="flex flex-col items-center space-y-3 text-green-500 text-sm font-medium rounded-lg overflow-y-hidden px-4 pt-3 pb-2 bg-background"
+          className="flex flex-col items-center space-y-4 text-green-500 text-sm font-medium rounded-lg overflow-y-hidden px-4 pt-3 pb-2 bg-background"
           style={{ boxShadow: '0 0 3px rgba(0,0,0,0.1)' }}
         >
           <IconButton
@@ -51,20 +51,23 @@ export default function HeaderBar({ credit }) {
           <div
             className={`w-full overflow-hidden transition-all duration-500 ${isOpenTogggle ? 'max-h-40' : 'max-h-0'}`}
           >
-            <div className="flex flex-col items-center space-y-3">
+            <div className="flex flex-col items-center space-y-4">
               <IconButton
                 icon={<i className="mgc_mail_fill text-[#FFBF47] text-xl" />}
                 label="알림"
                 textColor="text-[#FFBF47]"
+                href="/home/alert"
               />
               <IconButton
                 icon={<i className="mgc_award_fill text-sub2-100 text-xl" />}
                 label="랭킹"
+                href="/ranking"
                 textColor="text-sub2-100"
               />
               <IconButton
                 icon={<FaCamera className="w-4 h-4 text-[#7595EA]" />}
                 label="촬영"
+                href="/home/capture"
                 textColor="text-[#7595EA]"
               />
             </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import TaskList from './TaskList';
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { IoIosArrowDown } from 'react-icons/io';
 import { FaXmark } from 'react-icons/fa6';
 import { IoCheckmarkSharp } from 'react-icons/io5';
@@ -67,7 +67,7 @@ export default function TasksPage({ type, regionId, area = '' }) {
     );
 
   return (
-    <div className="flex flex-col gap-3 p-4 h-[calc(100vh-86px)]">
+    <div className="flex flex-col gap-3 px-4 h-[calc(100vh-86px)]">
       <div
         className="flex gap-2 items-center text-neutral-600 self-end font-normal text-[14px]"
         onClick={() => setBottomSheetOpen(true)}
@@ -82,7 +82,7 @@ export default function TasksPage({ type, regionId, area = '' }) {
         refetch={refetch}
       />
       <div
-        className={`fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-[390px] mx-auto pb-10 z-100 bg-background rounded-t-xl px-3 pt-4 shadow-[0_-4px_12px_rgba(0,0,0,0.1)] transition-transform duration-300 ease-in-out ${bottomSheetOpen ? 'translate-y-0' : 'translate-y-full'}`}
+        className={`fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full mx-auto appbar-padding-b z-100 bg-background rounded-t-xl px-3 pt-4 shadow-[0_-4px_12px_rgba(0,0,0,0.1)] transition-transform duration-300 ease-in-out ${bottomSheetOpen ? 'translate-y-0' : 'translate-y-full'}`}
       >
         <div className="flex items-center justify-between">
           <span className="font-semibold">정렬기준</span>
@@ -101,7 +101,10 @@ export default function TasksPage({ type, regionId, area = '' }) {
             <div
               key={filter.id}
               className={`flex items-center justify-between font-normal py-3 px-3 rounded-lg ${selectFilter.id === filter.id ? 'bg-main-5 text-main-100 font-semibold' : 'bg-neutral-100 text-neutral-900 font-normal'}`}
-              onClick={() => setSelectFilter(filter)}
+              onClick={() => {
+                setSelectFilter(filter);
+                setBottomSheetOpen(false);
+              }}
             >
               {filter.name}
               {selectFilter.id === filter.id && <IoCheckmarkSharp />}

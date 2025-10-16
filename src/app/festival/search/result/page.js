@@ -271,10 +271,10 @@ export default function FestivalSearchResultPage() {
   }, [loadMore]);
 
   return (
-    <div className="max-w-[390px] mx-auto h-screen w-screen flex flex-col bg-background">
+    <div className="mx-auto h-screen w-screen flex flex-col bg-background appbar-padding-t">
       {/* 고정 헤더 */}
       <header className="sticky top-0 z-[10] bg-background">
-        <div className="pt-[50px] px-4 pb-3">
+        <div className="px-4 pb-3">
           <SearchInputBar
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -337,7 +337,7 @@ export default function FestivalSearchResultPage() {
                 앗, 관련 축제가 없어요!
               </p>
               <p className="text-center text-sm text-neutral-500">
-                다른 키워드로 다시 검색해 주세요
+                다른 키워드로 다시 검색해 주세요 😢
               </p>
               <button
                 onClick={() => router.push('/festival')}
@@ -398,7 +398,7 @@ export default function FestivalSearchResultPage() {
         />
       )}
       <div
-        className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] z-[100]
+        className={`fixed bottom-0 left-1/2 -translate-x-1/2 w-full z-[100]
         bg-background rounded-t-xl px-4 py-8 transition-transform duration-300 ease-in-out
         ${sheet ? 'translate-y-0' : 'translate-y-[100vh]'}`}
       >

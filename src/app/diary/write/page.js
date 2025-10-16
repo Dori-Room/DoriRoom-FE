@@ -203,8 +203,8 @@ export default function DiaryWrite({ mode = 'create' }) {
   }, []);
 
   return (
-    <div className="min-h-screen pt-20">
-      <header className="fixed top-0 left-1/2 transform -translate-x-1/2 z-50 max-w-[390px] w-full pt-[50px] pb-[10px] bg-background">
+    <div className="min-h-screen header-padding-tb w-screen">
+      <header className="fixed top-0 left-1/2 transform -translate-x-1/2 z-50 w-full header-padding-t pb-[10px] bg-background">
         <div className="relative flex items-center justify-center mx-auto">
           <h1 className="text-lg font-semibold">
             {mode === 'edit' ? '일기 수정하기' : '일기 작성하기'}
@@ -222,7 +222,7 @@ export default function DiaryWrite({ mode = 'create' }) {
         </div>
       </header>
 
-      <div className="space-y-5 px-4 pt-7 pb-7">
+      <div className="space-y-5 px-4">
         {/* 축제 선택 */}
         <div>
           <p className="text-[15px] font-semibold mb-3">
@@ -233,7 +233,7 @@ export default function DiaryWrite({ mode = 'create' }) {
               readOnly
               type="text"
               disabled={mode === 'edit'}
-              className="flex-1 text-sm bg-neutral-100 rounded-md px-3 py-3 placeholder:text-neutral-300 focus:outline-none"
+              className="flex-7 text-sm bg-neutral-100 rounded-md px-3 py-3 placeholder:text-neutral-300 focus:outline-none"
               placeholder="페스티벌 찾기"
               value={selectedFestival?.title || ''}
               onChange={(e) =>
@@ -245,7 +245,7 @@ export default function DiaryWrite({ mode = 'create' }) {
             />
             {mode === 'create' && (
               <button
-                className="bg-main-100 text-background px-5 py-3 text-[15px] rounded-lg"
+                className="flex-1 bg-main-100 text-background px-5 py-3 text-[15px] rounded-lg"
                 onClick={() => {
                   sessionStorage.setItem('selectMode', 'true');
                   sessionStorage.setItem(
@@ -276,12 +276,12 @@ export default function DiaryWrite({ mode = 'create' }) {
             <input
               readOnly
               type="text"
-              className="flex-1 rounded-md bg-neutral-100 text-sm px-3 py-2 placeholder:text-neutral-300 focus:outline-none"
+              className="flex-7 rounded-md bg-neutral-100 text-sm px-3 py-2 placeholder:text-neutral-300 focus:outline-none"
               placeholder="00-00-00"
               value={selectedDate ? format(selectedDate, 'yy-MM-dd') : ''}
             />
             <button
-              className="bg-main-100 text-background px-5 py-3 text-[15px] rounded-lg"
+              className="flex-1 bg-main-100 text-background px-5 py-3 text-[15px] rounded-lg"
               onClick={() => setShowCalendar(true)}
             >
               선택
@@ -310,7 +310,7 @@ export default function DiaryWrite({ mode = 'create' }) {
               (img, i) => (
                 <div
                   key={i}
-                  className={`min-w-[120px] min-h-[120px] w-[120px] h-[120px] flex-shrink-0 rounded-md bg-neutral-100 flex items-center justify-center overflow-hidden relative ${
+                  className={`min-w-[120px] min-h-[120px] w-[120px] h-[120px] flex-shrink-0 rounded-md bg-neutral-100 flex overflow-hidden relative ${
                     img ? '' : 'border border-dashed border-neutral-300'
                   }`}
                 >
@@ -328,7 +328,7 @@ export default function DiaryWrite({ mode = 'create' }) {
                             prev.filter((_, idx) => idx !== i)
                           )
                         }
-                        className="bg-main-5 bg-opacity-50 text-main-100 rounded-full w-5 h-5 p-1 text-xs"
+                        className="absolute top-2 right-2 bg-main-5 bg-opacity-50 text-main-100 rounded-full w-5 h-5 p-1 text-xs"
                       >
                         <i className="mgc_close_line" />
                       </button>

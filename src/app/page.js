@@ -6,12 +6,13 @@ import useMyRoom from '@/hooks/user/useMyRoom';
 import LoadingContent from './_components/LoadingContent';
 import manifest from '@/data/manifest.json';
 import useWeather from '@/hooks/home/useWeather';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import weather from '@/data/weather.json';
 import useLocationPermission from '@/hooks/location/useLocationPermission';
 import useLocationWatcher from '@/hooks/location/useLocationWatcher';
 import { useLocationStore } from '@/stores/useLocationStore';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 const DEFAULT_FLOOR = 39;
 const DEFAULT_SHELF = 38;
@@ -27,10 +28,16 @@ export default function Home() {
   const { weather: info, refetch } = useWeather();
   const location = useLocationStore((s) => s.location); // { lat, lng, ts }
 
+  const [wallH, setWallH] = useState(0);
+  const wallRef = useRef(null);
+
   const zIndex = manifest.defaults.zIndex;
   const equippedItems = Array.isArray(data?.equippedItems)
     ? data.equippedItems
     : [];
+
+  const user = useAuthStore((s) => s.user);
+  if (!user) router.push('/auth');
 
   // 권한이 허용됐을 때만 watch 시작/중지
   useEffect(() => {
@@ -47,16 +54,11 @@ export default function Home() {
   }, [granted, location?.lat, location?.lng, refetch]);
 
   if (loading)
-    return (
-      <LoadingContent
-        loading={loading}
-        className="max-w-[390px] w-screen h-screen"
-      />
-    );
+    return <LoadingContent loading={loading} className="w-screen h-screen" />;
 
   if (error || !data) {
     return (
-      <div className="max-w-[390px] w-screen h-screen flex items-center justify-center text-red-500">
+      <div className="w-screen h-screen flex items-center justify-center text-red-500">
         데이터를 불러오는 중 오류가 발생했습니다.
       </div>
     );
@@ -72,26 +74,29 @@ export default function Home() {
   const selectWINDOW = byType.WINDOW;
   const selectAPPAREL = byType.APPAREL;
 
+  const DEFAULT_H = selectWALL ? wallH : 520;
   return (
-    <div className="h-screen overflow-y-hidden">
+    <div className="h-screen w-screen overflow-y-hidden">
       <HeaderBar credit={data.credit} />
 
-      <div className="relative flex-1 h-full flex justify-center items-center p-4 max-w-[390px] w-screen">
+      <div className="relative flex-1 h-full w-full flex justify-center items-center">
         {/* FLOOR */}
         <img
           src={
             manifest.items[selectFLOOR?.itemId]?.asset.src ||
             manifest.items[DEFAULT_FLOOR]?.asset.src
           }
-          className={`absolute top-130`}
-          style={{ zIndex: zIndex.FLOOR }}
+          className={`absolute w-full`}
+          style={{ zIndex: zIndex.FLOOR, top: DEFAULT_H }}
         />
         {/* WALL */}
         {manifest.items[selectWALL?.itemId]?.asset.src && (
           <img
+            ref={wallRef}
             src={manifest.items[selectWALL?.itemId]?.asset.src}
-            className={`absolute top-0`}
+            className={`absolute top-0 w-full`}
             style={{ zIndex: zIndex.WALL }}
+            onLoad={(e) => setWallH(e.currentTarget.clientHeight)} // 렌더된 높이
           />
         )}
         {/* 선반 */}
@@ -100,20 +105,20 @@ export default function Home() {
             manifest.items[selectSHELF?.itemId]?.asset.src ||
             manifest.items[DEFAULT_SHELF]?.asset.src
           }
-          className={`absolute top-75 left-3`}
-          style={{ zIndex: zIndex.SHELF }}
+          className={`absolute left-3`}
+          style={{ zIndex: zIndex.SHELF, top: DEFAULT_H - 180 }}
           onClick={() => router.push('/diary')}
         />
         {/* OBJECT */}
         {manifest.items[selectOBJECT?.itemId]?.asset.src && (
           <img
             src={manifest.items[selectOBJECT?.itemId]?.asset.src}
-            className={`absolute top-109 right-2`}
-            style={{ zIndex: zIndex.OBJECT }}
+            className={`absolute right-2`}
+            style={{ zIndex: zIndex.OBJECT, top: DEFAULT_H - 44 }}
           />
         )}
         {/* WINDOW */}
-        <div className="absolute top-37">
+        <div className="absolute" style={{ top: DEFAULT_H - 401 }}>
           <div className="relative w-[214px] h-[131px]">
             {/* 창문 */}
             <img
@@ -136,14 +141,38 @@ export default function Home() {
         </div>
 
         {/* APPAREL */}
-        <img
-          src={
-            manifest.items[selectAPPAREL?.itemId]?.asset.src ||
-            manifest.items[DEFAULT_APPAREL]?.asset.src
-          }
-          className={`absolute top-82`}
-          style={{ zIndex: zIndex.APPAREL }}
-        />
+        <div
+          className="absolute"
+          style={{ zIndex: zIndex.APPAREL, top: DEFAULT_H - 220 }}
+        >
+          <div className="relative">
+            {/* 말풍선 이미지 */}
+            <img src="/images/bubble.svg" />
+
+            {/* 말풍선 전체를 덮는 레이어 */}
+            <div className="absolute inset-0 bottom-2 flex items-center justify-center px-4">
+              <p
+                className={`text-justify break-words [overflow-wrap:anywhere] whitespace-pre-wrap max-w-full font-normal text-xs ${data?.speechBubble ? 'text-black' : 'text-neutral-400'}`}
+              >
+                {data?.speechBubble
+                  ? data?.speechBubble
+                  : '한줄소개를 추가해 보세요!'}{' '}
+                <i
+                  className="mgc_pencil_fill text-neutral-400"
+                  onClick={() => router.push('/home/edit-intro')}
+                />
+              </p>
+            </div>
+          </div>
+
+          <img
+            src={
+              manifest.items[selectAPPAREL?.itemId]?.asset.src ||
+              manifest.items[DEFAULT_APPAREL]?.asset.src
+            }
+            className="-mt-8"
+          />
+        </div>
       </div>
 
       <RoomStatsCard

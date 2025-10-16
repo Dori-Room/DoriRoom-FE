@@ -1,4 +1,3 @@
-// app/signup/code/page.jsx
 'use client';
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -8,6 +7,7 @@ import HeaderNavigationBar from '@/app/_components/HeaderNavigationBar';
 import PrimaryButton from '@/app/_components/PrimaryButton';
 import { sendSignupEmail, verifySignupCode } from '@/hooks/auth/useSignup';
 import LoadingModal from '@/app/_components/LoadingModal';
+import { useToast } from '@/app/_providers/ToastProvider';
 
 export default function SignupCodePage() {
   const router = useRouter();
@@ -16,6 +16,8 @@ export default function SignupCodePage() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState(null);
   const inputsRef = useRef([]);
+
+  const { show } = useToast();
 
   useEffect(() => {
     if (!email) router.replace('/signup/email');
@@ -82,9 +84,15 @@ export default function SignupCodePage() {
 
   async function onResend() {
     if (!email) return;
+    setLoading(true);
     try {
       await sendSignupEmail(email);
-    } catch (_) {}
+      show({ message: '인증코드가 다시 발송되었습니다.', variant: 'success' });
+    } catch (e) {
+      show({ message: '인증코드 발송에 실패했습니다.', variant: 'error' });
+    } finally {
+      setLoading(false);
+    }
   }
 
   const isValid = digits.filter((d) => /\d/.test(d)).length === 6;
@@ -135,7 +143,7 @@ export default function SignupCodePage() {
 
   return (
     <div
-      className="min-h-full w-full flex flex-col px-4 pt-28"
+      className="min-h-full w-screen flex flex-col px-4 header-padding-tb"
       style={{ minHeight: 'calc(var(--vh, 1vh) * 100)' }}
     >
       <div className="bg-background">
@@ -167,7 +175,7 @@ export default function SignupCodePage() {
                   value={digit}
                   className={`w-10 h-12 text-center text-lg rounded-[10px] focus:outline-none focus:ring-0 ${
                     isFilled
-                      ? 'bg-main-5 text-main-100'
+                      ? 'bg-main-5 text-main-100 font-semibold'
                       : 'bg-neutral-100 text-main'
                   }`}
                   onChange={(e) => onChangeDigit(i, e.target.value)}
@@ -196,7 +204,7 @@ export default function SignupCodePage() {
 
       <div
         ref={footerRef}
-        className="sticky left-0 right-0 pt-4 pb-7 w-full"
+        className="sticky left-0 right-0 pt-4 w-full"
         style={{
           bottom: 'calc(env(safe-area-inset-bottom) + var(--kb-offset, 0px))',
         }}
@@ -205,6 +213,7 @@ export default function SignupCodePage() {
           <button
             type="button"
             onClick={onResend}
+            disabled={loading}
             className="w-auto text-sm text-neutral-400 border-b-1 border-neutral-400 mb-4"
           >
             인증코드 다시 받기

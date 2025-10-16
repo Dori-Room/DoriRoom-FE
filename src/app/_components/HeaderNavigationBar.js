@@ -25,7 +25,7 @@ export default function HeaderNavigationBar({
 
   return (
     <header
-      className={`fixed top-0 left-1/2 transform -translate-x-1/2 z-50 max-w-[390px] w-full pt-[50px] pb-[20px] ${className}`}
+      className={`fixed top-0 left-1/2 transform -translate-x-1/2 z-50 w-full header-padding-t pb-[20px] ${className}`}
     >
       <div className="relative flex items-center justify-center mx-auto">
         {/* 중앙 타이틀 */}
@@ -61,7 +61,14 @@ export default function HeaderNavigationBar({
             단짝 도리 관리
           </button>
         )}
-
+        {type === 'ranking' && (
+          <button
+            onClick={() => router.push('/ranking/search')}
+            className="absolute right-[16px] text-xs text-neutral-500 items-center justify-center "
+          >
+            <i className="mgc_search_2_fill text-2xl" />
+          </button>
+        )}
         {/* 일기장 토글 버튼 */}
         {type === 'diary' && isMine && (
           <div className="absolute right-5">

@@ -10,6 +10,7 @@ import { useState } from 'react';
 import useDiaryLike from '@/hooks/diary/useDiaryLike';
 import { useAuthStore } from '@/stores/useAuthStore';
 import useDiaryDelete from '@/hooks/diary/useDiaryDelete';
+import { useToast } from '@/app/_providers/ToastProvider';
 
 export default function DiaryDetail({ diary, type }) {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function DiaryDetail({ diary, type }) {
 
   const user = useAuthStore((state) => state.user);
   const isMine = diary.author.id === user.userId;
+  const { show } = useToast();
 
   // 좋아요 훅 사용
   const {
@@ -47,7 +49,7 @@ export default function DiaryDetail({ diary, type }) {
   };
 
   return (
-    <div className="pt-20 pb-60">
+    <div className="w-screen header-padding-tb pb-60">
       <HeaderNavigationBar
         title={diary.festival?.title || ''}
         type={type === 'neighbor' ? null : 'diary'}
@@ -57,7 +59,7 @@ export default function DiaryDetail({ diary, type }) {
         isMine={isMine}
       />
 
-      <div className="p-5 space-y-5 whitespace-pre-line">
+      <div className="px-4 space-y-5 whitespace-pre-line">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <img
@@ -105,10 +107,17 @@ export default function DiaryDetail({ diary, type }) {
             <button
               onClick={async () => {
                 const nextLiked = !liked;
-                await toggleLike();
-                setLikeCount((prev) =>
-                  nextLiked ? prev + 1 : Math.max(0, prev - 1)
-                );
+                try {
+                  await toggleLike();
+                  setLikeCount((prev) =>
+                    nextLiked ? prev + 1 : Math.max(0, prev - 1)
+                  );
+                } catch (e) {
+                  show({
+                    message: e.message || '좋아요 처리 중 오류가 발생했어요.',
+                    variant: 'error',
+                  });
+                }
               }}
               disabled={likeLoading || likeMutating}
               aria-disabled={likeLoading || likeMutating}
@@ -132,7 +141,7 @@ export default function DiaryDetail({ diary, type }) {
       {/* 관련 축제 바텀시트 */}
       {diary.festival && (
         <div
-          className={`fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-[390px] mx-auto z-30 rounded-t-xl px-4 pt-4 pb-16 bg-main-5 shadow-[0_-4px_12px_rgba(0,0,0,0.1)] transition-transform duration-300 ease-in-out ${
+          className={`fixed bottom-0 left-1/2 transform -translate-x-1/2 w-screen mx-auto z-30 rounded-t-xl px-4 pt-4 appbar-padding-b bg-main-5 shadow-[0_-4px_12px_rgba(0,0,0,0.1)] transition-transform duration-300 ease-in-out ${
             isBottomOpen ? 'translate-y-0' : 'translate-y-[85%]'
           }`}
         >

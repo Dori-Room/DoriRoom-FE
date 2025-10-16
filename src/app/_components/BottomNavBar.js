@@ -28,9 +28,11 @@ export default function BottomNavBar() {
 
   const HIDDEN_PATHS = [
     '/home/decorate',
+    '/home/alert',
     '/festival/search/',
     '/festival/bookmarks/',
     '/login',
+    '/home/capture',
   ];
 
   const HIDDEN_PREFIXES = [
@@ -38,8 +40,9 @@ export default function BottomNavBar() {
     '/diary',
     '/signup/',
     '/auth',
-    '/mypage/myinfo',
+    '/mypage/',
     '/neighbor',
+    '/ranking',
   ];
 
   const shouldHide =
@@ -54,7 +57,7 @@ export default function BottomNavBar() {
   if (shouldHide) return null;
 
   return (
-    <nav className="max-w-[390px] w-full h-18 flex justify-around items-center bg-background fixed bottom-0 z-50 shadow-[0_-2px_4px_rgba(0,0,0,0.08)]">
+    <nav className="w-full h-18 flex justify-around items-center bg-background fixed bottom-0 z-50 shadow-[0_-2px_4px_rgba(0,0,0,0.08)]">
       {navItems.map(({ href, label, iconClass }) => {
         const isActive = pathname === href || pathname.startsWith(`${href}/`);
         const color = isActive ? 'var(--color-main-100)' : '#A3A3A3';
